@@ -2,6 +2,7 @@ import sys
 import os
 import numpy as np
 import string
+import csv
 
 ###############
 ## variables ##
@@ -18,21 +19,22 @@ Suslist = []
 
 def load_result(path):
     temp = []
-    with open(path, 'r', encoding='utf-8') as csvfile:
+    with open(path, 'r') as csvfile:
         rd = csv.reader(csvfile)
-        for row in reader:
-            print(row)
+        for row in rd:
+            #print(row)
             temp.append(row)
     csvfile.close()
     return temp
 
-def write_SusList(path, list, metal):
-    with open(path, 'w', encoding='utf-8') as csvfile:
+def write_SusList(path, list):
+    with open(path, 'w') as csvfile:
         fieldnames = ['vendor', 'metal']
         wt = csv.DictWriter(csvfile, fieldnames = fieldnames)
         wt.writeheader()
         for i in range(len(list)):
-            wt.writerow({'vendor': list[i], 'metal': metal})
+            wt.writerow({'vendor': list[i][0], 'metal': list[i][1]})
+    csvfile.close()
 '''
 def load_SuspectList(path)
     temp = []
@@ -56,13 +58,21 @@ def load_SuspectList(path)
 ## Main function ##
 ###################
 if __name__=='__main__':
-    lr = load_result(result_path)
+    lr = load_result(result_path)[0]
+    #drd = csv.DictReader(open(VenList_path, 'r'))
     result_loc = lr[0]
-    result_metal = lr[1]
-
-    drd = csv.DictReader(open(VenList_path, 'r', encoding='utf-8'))
-    for row in drd:
-        if (row[location] == result_loc) and (row[metal] == result_metal):
-            Suslist.append(row[vendor])
+    print(len(lr))
+    print(lr)
+    for i in range(len(lr)-1):
+        result_metal = lr[i+1]
+        print('Now water is polluted by {0}'.format(result_metal))
+        drd = csv.DictReader(open(VenList_path, 'r'))
+        for row in drd:
+            #print row
+            if (row['location'] == result_loc) and (row['metal'] == result_metal):
+                print('Suspect: {0}, {1}'.format(row['vendor'], row['metal']))
+                Suslist.append([row['vendor'], row['metal']])
+                #print(Suslist)
+        #drd.clear()
 #
-    write_SusList(SusList_path, Suslist, result_metal)
+        write_SusList(SusList_path, Suslist)

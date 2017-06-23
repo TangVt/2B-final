@@ -1,5 +1,7 @@
 vendor,location,metal
 aaa,1,Cu
-bbb,1,Fe
-ccc,2,Ne
+bbb,1,Cd
+ccc,2,Ni
 ddd,1,Cu
+ddd,1,Ni
+eee,1,Pb
